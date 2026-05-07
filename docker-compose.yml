@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   angular:
-    image: angular-app:latest
+    image: eshrefshalaa/angular-app:latest
     container_name: angular-container
     restart: always
     ports:
@@ -11,7 +11,7 @@ services:
       - web
 
   react:
-    image: react-app:latest
+    image: eshrefshalaa/react-app:latest
     container_name: react-container
     restart: always
     ports:

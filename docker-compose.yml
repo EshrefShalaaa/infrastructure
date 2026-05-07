@@ -2,9 +2,6 @@ version: '3.8'
 
 services:
   angular:
-    build:
-      context: ../angular-app
-      dockerfile: Dockerfile
     image: angular-app:latest
     container_name: angular-container
     restart: always
@@ -14,9 +11,6 @@ services:
       - web
 
   react:
-    build:
-      context: ../react-app
-      dockerfile: Dockerfile
     image: react-app:latest
     container_name: react-container
     restart: always

@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  angular:
+    build:
+      context: ../angular-app
+      dockerfile: Dockerfile
+    image: angular-app:latest
+    container_name: angular-container
+    restart: always
+    ports:
+      - "4200:80"
+    networks:
+      - web
+
+  react:
+    build:
+      context: ../react-app
+      dockerfile: Dockerfile
+    image: react-app:latest
+    container_name: react-container
+    restart: always
+    ports:
+      - "3000:80"
+    networks:
+      - web
+
+  npm:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginx-proxy-manager
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+      - "81:81"
+    volumes:
+      - npm_data:/data
+      - npm_letsencrypt:/etc/letsencrypt
+    networks:
+      - web
+
+networks:
+  web:
+    driver: bridge
+
+volumes:
+  npm_data:
+  npm_letsencrypt:

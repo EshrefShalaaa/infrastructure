@@ -10,14 +10,14 @@ services:
     networks:
       - web
 
-  react:
-    image: eshrefshalaa/react-app:latest
-    container_name: react-container
-    restart: always
-    ports:
-      - "3000:80"
-    networks:
-      - web
+  # react:
+  #   image: eshrefshalaa/react-app:latest
+  #   container_name: react-container
+  #   restart: always
+  #   ports:
+  #     - "3000:80"
+  #   networks:
+  #     - web
 
   npm:
     image: jc21/nginx-proxy-manager:latest

@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   angular:
     image: ghcr.io/eshrefshalaaa/angular-app:latest
@@ -9,6 +7,11 @@ services:
       - "4200:80"
     networks:
       - web
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   react:
     image: ghcr.io/eshrefshalaaa/react-app:latest
@@ -18,6 +21,11 @@ services:
       - "3000:80"
     networks:
       - web
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   npm:
     image: jc21/nginx-proxy-manager:latest
@@ -33,6 +41,18 @@ services:
     networks:
       - web
 
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: always
+    ports:
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    networks:
+      - web
+
 networks:
   web:
     external: true
@@ -41,3 +61,4 @@ networks:
 volumes:
   npm_data:
   npm_letsencrypt:
+  portainer_data:

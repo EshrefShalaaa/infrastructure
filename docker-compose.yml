@@ -1,12 +1,18 @@
 services:
   angular:
     image: ghcr.io/eshrefshalaaa/angular-app:latest
-    container_name: angular-container
-    restart: always
     ports:
       - "4200:80"
     networks:
       - web
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      restart_policy:
+        condition: on-failure
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:80"]
       interval: 30s
@@ -15,12 +21,18 @@ services:
 
   react:
     image: ghcr.io/eshrefshalaaa/react-app:latest
-    container_name: react-container
-    restart: always
     ports:
       - "3000:80"
     networks:
       - web
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      restart_policy:
+        condition: on-failure
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:80"]
       interval: 30s
@@ -29,8 +41,6 @@ services:
 
   npm:
     image: jc21/nginx-proxy-manager:latest
-    container_name: nginx-proxy-manager
-    restart: always
     ports:
       - "80:80"
       - "443:443"
@@ -40,6 +50,10 @@ services:
       - npm_letsencrypt:/etc/letsencrypt
     networks:
       - web
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
 
 networks:
   web:
@@ -48,5 +62,6 @@ networks:
 
 volumes:
   npm_data:
+    external: true
   npm_letsencrypt:
-  portainer_data:
+    external: true

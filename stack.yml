@@ -1,0 +1,69 @@
+services:
+  angular:
+    image: ghcr.io/eshrefshalaaa/angular-app:latest
+    ports:
+      - "4200:80"
+    networks:
+      - web
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      restart_policy:
+        condition: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  react:
+    image: ghcr.io/eshrefshalaaa/react-app:latest
+    ports:
+      - "3000:80"
+    networks:
+      - web
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      restart_policy:
+        condition: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  npm:
+    image: jc21/nginx-proxy-manager:latest
+    ports:
+      - "80:80"
+      - "443:443"
+      - "81:81"
+    volumes:
+      - npm_data:/data
+      - npm_letsencrypt:/etc/letsencrypt
+    networks:
+      - web
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+networks:
+  web:
+    external: true
+    name: web-apps_web
+
+volumes:
+  npm_data:
+    external: true
+    name: infrastructure_npm_data
+  npm_letsencrypt:
+    external: true
+    name: infrastructure_npm_letsencrypt

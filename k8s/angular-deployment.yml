@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: angular-app
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: angular
+  template:
+    metadata:
+      labels:
+        app: angular
+    spec:
+      imagePullSecrets:
+      - name: ghcr-secret
+      containers:
+      - name: angular
+        image: ghcr.io/eshrefshalaaa/angular-app:latest
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: angular-service
+  namespace: default
+spec:
+  selector:
+    app: angular
+  ports:
+  - port: 80
+    targetPort: 80
+  type: ClusterIP
